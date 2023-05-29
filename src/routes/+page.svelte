@@ -128,11 +128,11 @@
 						<input
 							type="text"
 							placeholder="Enter your text"
-							class="w-full px-4 py-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white"
+							class="w-full px-4 py-2 border border-gray-300 rounded-l-full focus:outline-none focus:ring-2 focus:ring-yellow-500 bg-white"
 						/>
 						<button
 							type="button"
-							class="px-4 py-2 bg-yellow-500 text-white rounded-r-lg hover:bg-yellow-600 focus:outline-none focus:bg-yellow-600"
+							class="px-4 py-2 bg-yellow-500 text-white rounded-r-full hover:bg-yellow-600 focus:outline-none focus:bg-yellow-600"
 							>Add</button
 						>
 					</div>
@@ -140,7 +140,7 @@
 			</div>
 			<div class="w-full md:w-96 mx-auto justify-end flex my-2">
 				<button
-					class="px-4 py-2 rounded-full bg-yellow-500 text-white hover:bg-yellow-600 focus:outline-none focus:bg-yellow-600 shadow-md"
+					class="px-4 py-2 rounded-full bg-yellow-500 text-white hover:bg-yellow-600 focus:outline-none focus:bg-yellow-600 shadow-lg"
 				>
 					Generate
 				</button>
