@@ -1,9 +1,17 @@
 <script>
   import { afterUpdate } from 'svelte';
+
   import ListItem from '../components/ListItem.svelte';
   import ResponseItem from '../components/ResponseItem.svelte';
+  import LoadingSpinner from '../components/LoadingSpinner.svelte';
+  import { onMount } from 'svelte';
+
   let options = [];
   let containerRef;
+  let responses = [];
+  let jsonData = '';
+
+  let isLoading = false;
 
   let currentOption = '';
 
@@ -32,10 +40,47 @@
     }
   }
 
+  onMount(async () => {
+    // const res = await fetch(`/tutorial/api/album`);
+    // photos = await res.json();
+    // isLoading = false;
+  });
+
   function updateOptions(newValue) {
     console.log('here is the new value:');
     console.log(newValue);
     options = newValue.detail;
+  }
+
+  async function handleSubmit(options) {
+    console.log('dekhi');
+    isLoading = true;
+    const res = await fetch('/api/response', {
+      method: 'POST',
+      body: JSON.stringify({
+        options
+      })
+    });
+    console.log('res.body');
+    console.log(res.body);
+    const json = await res.json();
+    console.log('from handle submit12');
+    responses = json['responses'];
+    console.log('from handle HERE');
+    let jsonString = JSON.stringify(responses, null, 2);
+    jsonString = jsonString.replace(/\n/g, '');
+
+    // Remove extra indentation
+    jsonString = jsonString.replace(/\s{2,}/g, '');
+
+    // Parse the JSON
+    jsonData = JSON.parse(jsonString);
+    console.log('THE TYPE OF JSONDATA');
+    console.log(typeof jsonData);
+    jsonData = JSON.parse(jsonData);
+    console.log(typeof jsonData);
+    console.log('from handle MAYBE HGERERE');
+    isLoading = false;
   }
 </script>
 
@@ -77,6 +122,7 @@
         {#if !isOptionsEmpty(options)}
           <button
             class="px-4 py-2 rounded-full bg-amber-400 text-black hover:bg-amber-500 focus:outline-none shadow-lg"
+            on:click={handleSubmit(options)}
           >
             Generate
           </button>
@@ -86,16 +132,32 @@
   </div>
   <div class="relative p-20 bg-amber-100">
     <p class="pb-10 font-spartan text-4xl text-black space-y-10">You might also like...</p>
-    <div
-      class="overflow-y-auto max-h-96 max-w-sm mx-auto bg-white dark:bg-slate-800 dark:highlight-white/5 shadow-lg ring-1 ring-black/5 rounded-xl flex flex-col divide-y dark:divide-slate-200/5"
-    >
-      <ResponseItem
-        id="1"
-        title="Nobody saves the world"
-        subtitle="Drinkbox Studios"
-        url="https://store.steampowered.com/app/1432050/Nobody_Saves_the_World/"
-      />
-    </div>
+    <!-- <div
+    class="overflow-y-auto max-h-96 max-w-sm mx-auto bg-white dark:bg-slate-800 dark:highlight-white/5 shadow-lg ring-1 ring-black/5 rounded-xl flex flex-col divide-y dark:divide-slate-200/5"
+  >
+    {#each jsonData as item (item.id)}
+      
+        <ResponseItem id={item.id} title={item.name} subtitle={item.details} url={item.url} />
+     
+    {:else}
+      <LoadingSpinner size="medium" />
+    {/each}
+  </div> -->
+
+    {#if isLoading}
+      <div class="flex justify-center items-center max-h-96 mt-16">
+        <LoadingSpinner size="medium" />
+      </div>
+    {:else}
+      <div
+        class="overflow-y-auto max-h-96 max-w-sm mx-auto bg-white dark:bg-slate-800 dark:highlight-white/5 shadow-lg rounded-xl flex flex-col divide-y dark:divide-slate-200/5"
+      >
+        {#each jsonData as item (item.id)}
+          <ResponseItem id={item.id} title={item.name} subtitle={item.details} url={item.url} />
+        {/each}
+      </div>
+    {/if}
+
     <div class="absolute bottom-0 right-0 text-gray-800 p-4">
       <p class="text-end">Made with ChatGPT & Svelte</p>
       <p class="text-end">by Sadat Daniel</p>
