@@ -1,19 +1,18 @@
 <script>
-  import { afterUpdate } from 'svelte';
-
+  import { afterUpdate, onMount, onDestroy } from 'svelte';
   import ListItem from '../components/ListItem.svelte';
   import ResponseItem from '../components/ResponseItem.svelte';
   import LoadingSpinner from '../components/LoadingSpinner.svelte';
-  import { onMount } from 'svelte';
 
   let options = [];
   let containerRef;
   let responses = [];
-  let jsonData = '';
+  let jsonData = [];
 
   let isLoading = false;
-
   let currentOption = '';
+
+  let controller = null;
 
   function addItem() {
     if (currentOption !== '' && options.length < 11) {
@@ -52,36 +51,75 @@
     options = newValue.detail;
   }
 
+  // async function handleSubmit(options) {
+  // console.log('dekhi');
+  // isLoading = true;
+  // const res = await fetch('/api/response', {
+  //   method: 'POST',
+  //   body: JSON.stringify({
+  //     options
+  //   })
+  // });
+  // console.log('res.body');
+  // console.log(res.body);
+  // const json = await res.json();
+  // console.log('from handle submit12');
+  // responses = json['responses'];
+  // console.log('from handle HERE');
+  // let jsonString = JSON.stringify(responses, null, 2);
+  // jsonString = jsonString.replace(/\n/g, '');
+
+  // // Remove extra indentation
+  // jsonString = jsonString.replace(/\s{2,}/g, '');
+
+  // // Parse the JSON
+  // jsonData = JSON.parse(jsonString);
+  // console.log('THE TYPE OF JSONDATA');
+  // console.log(typeof jsonData);
+  // jsonData = JSON.parse(jsonData);
+  // console.log(typeof jsonData);
+  // console.log('from handle MAYBE HGERERE');
+  // isLoading = false;
+
+  // }
+
   async function handleSubmit(options) {
-    console.log('dekhi');
     isLoading = true;
-    const res = await fetch('/api/response', {
-      method: 'POST',
-      body: JSON.stringify({
-        options
-      })
-    });
-    console.log('res.body');
-    console.log(res.body);
-    const json = await res.json();
-    console.log('from handle submit12');
-    responses = json['responses'];
-    console.log('from handle HERE');
-    let jsonString = JSON.stringify(responses, null, 2);
-    jsonString = jsonString.replace(/\n/g, '');
+    controller = new AbortController();
+    const signal = controller.signal;
 
-    // Remove extra indentation
-    jsonString = jsonString.replace(/\s{2,}/g, '');
+    try {
+      const response = await fetch('/api/response', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ options }),
+        signal
+      });
 
-    // Parse the JSON
-    jsonData = JSON.parse(jsonString);
-    console.log('THE TYPE OF JSONDATA');
-    console.log(typeof jsonData);
-    jsonData = JSON.parse(jsonData);
-    console.log(typeof jsonData);
-    console.log('from handle MAYBE HGERERE');
-    isLoading = false;
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      // Parse the server response into jsonData
+      jsonData = await response.json();
+    } catch (error) {
+      if (signal.aborted) {
+        console.error('Request was aborted');
+      } else {
+        console.error('Fetch Error:', error);
+      }
+    } finally {
+      isLoading = false;
+      controller = null;
+    }
   }
+
+  onDestroy(() => {
+    // Abort the fetch request by calling abort() on the AbortController instance
+    if (controller) {
+      controller.abort();
+    }
+  });
 </script>
 
 <div class="grid grid-cols-1 md:grid-cols-2 h-full">

@@ -35,15 +35,11 @@ export const POST = async ({ request }) => {
   console.log(body.options);
 
   const response = await openai.createChatCompletion({
-    // model: 'text-davinci-003',
     model: 'gpt-3.5-turbo',
-    // prompt: `${options}`,
-
     messages: [
       {
         role: 'user',
         content: `The choices are: ${body.options},  
-
         only return 5 other suggestions in valid JSON object and nothing else, in the following format:
         [
             {
@@ -55,53 +51,23 @@ export const POST = async ({ request }) => {
         ]`
       }
     ],
-
     temperature: 1,
     top_p: 1.0,
     n: 1,
     frequency_penalty: 0,
     presence_penalty: 0
-
-    // stop: ['#', ';']
   });
-  //   const response = await openai.createCompletion({
-  //     // model: 'text-davinci-003',
-  //     model: 'text-davinci-003',
-  //     // prompt: `${options}`,
-  //     prompt: `The choices are: ${body.options},
-
-  //     return 5 other suggestions in valid JSON object
-  //     [
-  //         {
-  //           "id": ID,
-  //           "name": NAME,
-  //           "details": WHO MADE/DEVELOPED IT (only name)
-  //           "url": if a book Goodreads link/ if music Spotify link, if game store link (prefer steam), if person/animal wikipedia link, if movie imdb link
-  //         },
-  //     ]`,
-
-  //     temperature: 0,
-  //     max_tokens: 2000
-  //   });
-
-  //   data = response.data;
-  //   console.log('here is my body from openai/response');
-  //   console.log(response.data.choices[0].text);
 
   if (response.data.choices.length > 0 && response.data.choices[0].message !== undefined) {
-    // return response.data.choices[0].message.content;
-    // return new Response(JSON.stringify({ responses: response.data.choices[0].message.content }), {
-    //         status: 201
-    //       });),
-
     console.log('here is my body from openai/response');
     console.log(response.data.choices[0].message.content);
 
-    return new Response(JSON.stringify({ responses: response.data.choices[0].message.content }), {
+    // Parse the content of the API response into a JSON array
+    const data = JSON.parse(response.data.choices[0].message.content);
+
+    // Send the array as a response body
+    return new Response(JSON.stringify(data), {
       status: 201
     });
-    //   return new Response(JSON.stringify({ responses: response.data.choices[0].text }), {
-    //     status: 201
-    //   });
   }
 };
