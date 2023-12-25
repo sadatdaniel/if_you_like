@@ -7,28 +7,6 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-// export const GET = async ({ request }) => {
-//   const authHeader = request.headers.get('Authorization');
-
-//   if (authHeader !== 'Myauthheader') {
-//     return new Response(JSON.stringify({ message: 'Invalid Creadentials' }), {
-//       status: 401
-//     });
-//   }
-
-//   //   let data;
-//   const response = await openai.createCompletion({
-//     model: 'text-davinci-003',
-//     // prompt: `${options}`,
-//     prompt: `these are my favorite books, ${prop}. can you suggest me some more like these?`,
-//     temperature: 0,
-//     max_tokens: 2000
-//   });
-//   //   data = response.data;
-
-//   return new Response(JSON.stringify(response.data), { status: 200 });
-// };
-
 export const POST = async ({ request }) => {
   const body = await request.json();
   console.log('here is my body from api/response/+server.js');
@@ -62,10 +40,8 @@ export const POST = async ({ request }) => {
     console.log('here is my body from openai/response');
     console.log(response.data.choices[0].message.content);
 
-    // Parse the content of the API response into a JSON array
     const data = JSON.parse(response.data.choices[0].message.content);
 
-    // Send the array as a response body
     return new Response(JSON.stringify(data), {
       status: 201
     });

@@ -1,5 +1,5 @@
 <script>
-  export let size = 'medium'; // Optional prop to control the size of the spinner
+  export let size = 'medium';
 </script>
 
 {#if size === 'small'}
@@ -12,10 +12,8 @@
 
 <style>
   .spinner {
-    /* Add your spinner styles here */
-    /* Example styles */
-    border: 4px solid #f3f3f3; /* Light gray border */
-    border-top: 4px solid rgb(245 158 11); /* Blue top border */
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid rgb(245 158 11);
     border-radius: 50%;
     width: var(--size, 24px);
     height: var(--size, 24px);

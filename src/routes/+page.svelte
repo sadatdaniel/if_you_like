@@ -51,38 +51,6 @@
     options = newValue.detail;
   }
 
-  // async function handleSubmit(options) {
-  // console.log('dekhi');
-  // isLoading = true;
-  // const res = await fetch('/api/response', {
-  //   method: 'POST',
-  //   body: JSON.stringify({
-  //     options
-  //   })
-  // });
-  // console.log('res.body');
-  // console.log(res.body);
-  // const json = await res.json();
-  // console.log('from handle submit12');
-  // responses = json['responses'];
-  // console.log('from handle HERE');
-  // let jsonString = JSON.stringify(responses, null, 2);
-  // jsonString = jsonString.replace(/\n/g, '');
-
-  // // Remove extra indentation
-  // jsonString = jsonString.replace(/\s{2,}/g, '');
-
-  // // Parse the JSON
-  // jsonData = JSON.parse(jsonString);
-  // console.log('THE TYPE OF JSONDATA');
-  // console.log(typeof jsonData);
-  // jsonData = JSON.parse(jsonData);
-  // console.log(typeof jsonData);
-  // console.log('from handle MAYBE HGERERE');
-  // isLoading = false;
-
-  // }
-
   async function handleSubmit(options) {
     isLoading = true;
     controller = new AbortController();
@@ -170,17 +138,6 @@
   </div>
   <div class="relative p-20 bg-amber-100">
     <p class="pb-10 font-spartan text-4xl text-black space-y-10">You might also like...</p>
-    <!-- <div
-    class="overflow-y-auto max-h-96 max-w-sm mx-auto bg-white dark:bg-slate-800 dark:highlight-white/5 shadow-lg ring-1 ring-black/5 rounded-xl flex flex-col divide-y dark:divide-slate-200/5"
-  >
-    {#each jsonData as item (item.id)}
-      
-        <ResponseItem id={item.id} title={item.name} subtitle={item.details} url={item.url} />
-     
-    {:else}
-      <LoadingSpinner size="medium" />
-    {/each}
-  </div> -->
 
     {#if isLoading}
       <div class="flex justify-center items-center max-h-96 mt-16">
