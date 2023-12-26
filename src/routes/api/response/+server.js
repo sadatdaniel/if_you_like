@@ -1,15 +1,16 @@
-import { OPENAI_API_KEY } from '$env/static/private';
+// import { OPENAI_API_KEY } from '$env/static/private';
 import { Configuration, OpenAIApi } from 'openai';
 
 const configuration = new Configuration({
-  apiKey: OPENAI_API_KEY
+  apiKey: process.env.OPENAI_API_KEY
 });
+
+process.env.OPENAI_API_KEY;
 
 const openai = new OpenAIApi(configuration);
 
 export const POST = async ({ request }) => {
   const body = await request.json();
-  console.log('here is my body from api/response/+server.js');
   console.log(body.options);
 
   const response = await openai.createChatCompletion({
