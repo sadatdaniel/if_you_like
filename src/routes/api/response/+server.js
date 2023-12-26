@@ -1,9 +1,11 @@
 import { OPENAI_API_KEY } from '$env/static/private';
 import { Configuration, OpenAIApi } from 'openai';
 
-process.env.OPENAI_API_KEY;
+// process.env.OPENAI_API_KEY;
 
 let apiKey;
+console.log(process.env.NODE_ENV);
+
 if (process.env.NODE_ENV === 'production') {
   apiKey = process.env.OPENAI_API_KEY;
 } else {
