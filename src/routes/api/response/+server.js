@@ -1,11 +1,18 @@
-// import { OPENAI_API_KEY } from '$env/static/private';
+import { OPENAI_API_KEY } from '$env/static/private';
 import { Configuration, OpenAIApi } from 'openai';
 
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY
-});
-
 process.env.OPENAI_API_KEY;
+
+let apiKey;
+if (process.env.NODE_ENV === 'production') {
+  apiKey = process.env.OPENAI_API_KEY;
+} else {
+  apiKey = OPENAI_API_KEY;
+}
+
+const configuration = new Configuration({
+  apiKey: apiKey
+});
 
 const openai = new OpenAIApi(configuration);
 
